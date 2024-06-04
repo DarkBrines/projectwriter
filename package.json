@@ -4,13 +4,8 @@
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/uuid": "^9.0.8"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {
-    "uuid": "^9.0.1",
-    "ws": "^8.17.0"
-  }
 }
