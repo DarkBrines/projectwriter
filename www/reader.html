@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PublicWriter</title>
+
+    <style>
+        html,
+        body,
+        *:not(button) {
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            height: 10vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header>* {
+            margin-right: 1.5rem;
+        }
+
+        #board {
+            height: calc(90vh - 1rem);
+            width: calc(100vw - 2rem);
+            margin: 1rem;
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <span id="board-name"></span>
+    </header>
+
+    <textarea id="board" disabled></textarea>
+
+    <script>
+        const board_id = window.location.hash.replace("#", "");
+
+        const board = document.querySelector("textarea#board");
+        const board_name = document.querySelector("#board-name");
+
+        var ws;
+
+        function new_websocket() {
+            ws = new WebSocket((window.location.protocol == "https:") ? "wss://" : "ws://" + window.location.host + "/ws/r?id=" + board_id);
+            ws.onclose = ws_closed_handler;
+            ws.onerror = ws_closed_handler;
+            ws.onopen = ws_init;
+            ws.onmessage = ws_handlemsg;
+        }
+
+        function ws_init() {
+            ws.send(JSON.stringify({
+                cmd: 3,
+            }))
+        }
+
+        let wsReconnectTimeout = null
+        function ws_closed_handler() {
+            if (wsReconnectTimeout !== null)
+                clearTimeout(wsReconnectTimeout);
+
+            setTimeout(new_websocket, 1000)
+        }
+
+        function ws_handlemsg(ev) {
+            const data = JSON.parse(ev.data);
+
+            const cmd = Number(data["cmd"])
+            if (isNaN(cmd) || !isFinite(cmd)) {
+                return;
+            }
+
+            if (cmd == 3) {
+                if (data["board_id"] && data["board_id"] != selected_board_id)
+                    return;
+                board.value = data["content"];
+                board_name.textContent = data["board_name"];
+            }
+
+        }
+
+        new_websocket()
+
+    </script>
+</body>
+
+</html>
