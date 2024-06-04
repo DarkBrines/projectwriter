@@ -1,4 +1,5 @@
-# projectwriter[d[c
+# projectwriter
+By Raphaël Roumezin
 
 To install dependencies:
 
@@ -12,4 +13,8 @@ To run:
 bun run index.ts
 ```
 
-This project was created using `bun init` in bun v1.1.8. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+To build for docker:
+
+```bash
+docker build . -t TAG:VERSION
+```
