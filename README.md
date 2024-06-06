@@ -23,3 +23,5 @@ docker build . -t TAG:VERSION
 - Add the possibility to create multiple boards at once
 - Give visual feedback of the client being connected or not
 - Send ping/pongs between server and clients
+- All data storage is memory-based, so intergrate with databases
+- Distribute the code through multiple files to make it more readable
